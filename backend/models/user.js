@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const { validatePassword } = require("../utils/password.js")
 const urlRegex = /^https?:\/\/(www\.)?[\w\-._~:/?#[\]@!$&'()*+,;=]+#?$/;
 
 const userSchema = new mongoose.Schema({
@@ -10,7 +11,8 @@ const userSchema = new mongoose.Schema({
   password:{
     type: String,
     required: true,
-    minlength: 8
+    minlength: 8,
+    select:false
   },
   name:{
     type: String,
@@ -26,7 +28,7 @@ const userSchema = new mongoose.Schema({
   },
   avatar: {
     type: String,
-    required: true,
+    required: false,
     validate: {
     validator: function(v) {
       return urlRegex.test(v);
@@ -35,5 +37,17 @@ const userSchema = new mongoose.Schema({
     }
   }
 })
+
+userSchema.statics.findByCredentials = async function findByCredentials({email,password}){
+  const user = await this.findOne({email}).select("+password");
+  if(!user){
+    return({error: `User ${email} and/or password not found`})
+  }
+  if(!validatePassword(password, user.password)){
+    return({error: `invalid Credentials`})
+  }
+
+  return ({ id: user._id, name: user.name, about: user.about})
+}
 
 module.exports = mongoose.model('user',userSchema)

@@ -2,7 +2,9 @@ const express = require("express")
 const userRouter = require('./routes/users')
 const cardRouter = require('./routes/cards')
 const mongoose = require("mongoose")
-const db = "mongodb://localhost:27017/aroundb"
+require("dotenv").config()
+
+const db = process.env.MONGO_URI
 const app = express()
 const PORT = 3000
 
@@ -11,7 +13,6 @@ app.use((req, res, next) => {
   req.user = {
     _id: '685344c22129cdc75e7cb775'
   };
-
   next();
 });
 

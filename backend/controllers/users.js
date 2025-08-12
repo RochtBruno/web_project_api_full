@@ -1,4 +1,9 @@
 const User = require("../models/user");
+const { hashPassword } = require("../utils/password.js")
+const jwt = require("jsonwebtoken")
+require("dotenv").config()
+
+console.log(process.env.JWT_SECRET)
 
 exports.getAllUsers = async (req, res) => {
   try {
@@ -28,17 +33,67 @@ exports.getUserById = async (req, res) => {
   }
 };
 
+exports.checkUser = async(req, res) => {
+  const { authorization } = req.headers
+  if(!authorization){
+    return res.status(401).json({error: "token não fornecido"})
+  }
+  const [,token] = authorization.split(" ")
+  console.log(token);
+  try {
+    const isValid = jwt.verify(token, process.env.JWT_SECRET)
+    if(!isValid){
+      return res.status(401).json({error: "token invalid"})
+    }
+    const { id } = jwt.decode(token)
+    const user = await User.findById(id)
+    if(!user){
+      return res.status(404).json({error : "Usuário não encontrado"})
+    }
+    return res.status(200).json(user)
+  } catch (error) {
+    console.error(`Erro ao verificar token`, error);
+    res.status(500).json({ message: 'Erro ao verificar token' });
+  }
+}
+
 exports.createUser = async (req, res) => {
   try {
     const {email, password, name, about, avatar } = req.body;
-    const newUser = await User.create({email,password, name, about, avatar });
-    res.status(201).json(newUser);
+    const newUser = await User.create({
+      email,
+      password: hashPassword(password), 
+      name: "User", 
+      about: "About me", 
+      avatar });
+    res.status(201).json({
+      id: newUser._id,
+      email: newUser.email,
+      name: newUser.name,
+      about: newUser.about,
+      avatar: newUser.avatar,
+    });
   } catch (error) {
     if (error.name === 'ValidationError') {
       return res.status(400).json({ message: 'Dados inválidos ao criar usuário', details: error.message });
     }
     console.error('Erro ao criar usuário:', error);
     res.status(500).json({ message: 'Erro interno ao criar usuário' });
+  }
+};
+
+exports.loginUser = async (req, res) => {
+  try {
+    const {email, password} = req.body;
+    const user = await User.findByCredentials({ email, password });
+    if(user.error){
+      return res.status(401).json({message: user.error});
+    }
+    const token = jwt.sign(user, process.env.JWT_SECRET)
+    res.status(201).json({id: user.id,token});
+  } catch (error) {
+    console.error('Erro ao fazer login:', error);
+    res.status(500).json({ message: 'Erro ao fazer login' });
   }
 };
 
