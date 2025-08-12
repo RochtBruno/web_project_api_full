@@ -1,0 +1,36 @@
+.modal__wrapper{
+    position: relative;
+}
+
+.close__infotooltip{
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    cursor: pointer;
+    z-index: 3;
+}
+
+.infotooltip{
+    position: relative;
+    margin: 0 auto;
+    width: 430px;
+    height: 330px;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    z-index: 3;
+}
+
+
+@media screen and (max-width: 768px){
+    .close__infotooltip{
+        position: absolute;
+        top: -60px;
+        right: 50%;
+        transform: translateX(50%);
+    }
+
+}

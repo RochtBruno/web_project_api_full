@@ -1,0 +1,117 @@
+.header{
+	padding-top: 45px;
+	padding-bottom: 45px;
+	display: flex;
+	border-bottom: 1px solid #545454;
+	justify-content: space-between;
+	align-items: center;
+}
+.header__logo{
+	width: 173px;
+	height:33px
+}
+
+.header__info-desktop{
+	display: flex;
+	gap: 40px;
+}
+
+.header__email{
+	color: #fff;
+	font-size: 18px;
+}
+
+.header__btn{
+	text-decoration: none;
+	font-size: 18px;
+	color: #fff;
+}
+
+.header__btn:hover{
+	opacity: 0.8;
+}
+
+.header__btn-logout{
+	background-color: #000;
+	color: #fff;
+	border: none;
+	font-size: 18px;
+}
+
+.header__btn-logout:hover{
+	opacity: 0.8;
+}
+
+.menu-mobile{
+	cursor: pointer;
+	display: none;
+}
+
+.menu-mobile:hover{
+	opacity: 0.8;
+}
+
+.menu-mobile div{
+	width: 32px;
+	height: 3px;
+	background-color: white;
+	margin: 6px;
+	transition: 0.3s;
+}
+
+.menu-mobile-panel {
+  width: 100%;
+  padding: 0;
+  text-align: center;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: all 0.5s ease;
+  display: flex;
+}
+
+.menu-mobile-panel.is-open {
+  max-height: 100px;
+  opacity: 1;
+  padding: 10px 0;
+}
+
+.menu-mobile.active .line-1{
+    transform: rotate(-45deg) translate(-3px,4px);
+}
+
+.menu-mobile.active .line-2{
+    transform: rotate(45deg) translate(-2px,-4px);
+}
+
+@media screen and (max-width: 768px){
+	.header{
+		padding-left: 2%;
+		padding-right: 2%;
+	}
+}
+
+
+@media screen and (max-width: 540px){
+	.menu-mobile {
+		display: block;
+	}
+
+	.header__info-desktop {
+		display: none;
+	}
+
+	.header__email,
+	.header__btn-logout {
+		color: white;
+		font-size: 18px;
+	}
+
+	.header__btn-logout {
+		background: none;
+		border: none;
+	}
+}
