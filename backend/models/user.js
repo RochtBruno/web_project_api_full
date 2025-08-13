@@ -6,7 +6,13 @@ const userSchema = new mongoose.Schema({
   email:{
     type: String,
     required:true,
-    unique:true
+    unique:true,
+    validate: {
+      validator: function(v) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+      },
+      message: props => `${props.value} não é um email válido!`
+    }
   },
   password:{
     type: String,
@@ -18,17 +24,14 @@ const userSchema = new mongoose.Schema({
     type: String,
     minlength: 2,
     maxlength: 30,
-    required: true
   },
   about: {
     type: String,
     minlength: 2,
     maxlength: 30,
-    required: true
   },
   avatar: {
     type: String,
-    required: false,
     validate: {
     validator: function(v) {
       return urlRegex.test(v);

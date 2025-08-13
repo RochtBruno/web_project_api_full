@@ -3,7 +3,7 @@ const userRouter = require('./routes/users')
 const cardRouter = require('./routes/cards')
 const mongoose = require("mongoose")
 require("dotenv").config()
-
+const { createUser, loginUser } = require("./controllers/users.js")
 const db = process.env.MONGO_URI
 const app = express()
 const PORT = 3000
@@ -22,6 +22,8 @@ mongoose.connect(db)
 
 app.use("/users",userRouter)
 app.use("/cards",cardRouter)
+app.post("/signup", createUser);
+app.post("/signin",loginUser)
 
 
 app.use((req,res) => {

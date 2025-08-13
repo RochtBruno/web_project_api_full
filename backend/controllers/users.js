@@ -63,9 +63,9 @@ exports.createUser = async (req, res) => {
     const newUser = await User.create({
       email,
       password: hashPassword(password), 
-      name: "User", 
-      about: "About me", 
-      avatar });
+      name: "Jacques Cousteau", 
+      about: "Explorer", 
+      avatar: "https://practicum-content.s3.us-west-1.amazonaws.com/resources/moved_avatar_1604080799.jpg" });
     res.status(201).json({
       id: newUser._id,
       email: newUser.email,
@@ -89,7 +89,9 @@ exports.loginUser = async (req, res) => {
     if(user.error){
       return res.status(401).json({message: user.error});
     }
-    const token = jwt.sign(user, process.env.JWT_SECRET)
+    const token = jwt.sign(user, process.env.JWT_SECRET,{
+      expiresIn:"7d"
+    })
     res.status(201).json({id: user.id,token});
   } catch (error) {
     console.error('Erro ao fazer login:', error);
