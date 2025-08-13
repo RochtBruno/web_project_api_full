@@ -8,7 +8,7 @@ console.log(process.env.JWT_SECRET)
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.find({});
-    res.status(200).json(users);
+    res.status(200).json({ data: users });
   } catch (error) {
     console.error('Erro ao buscar usuários:', error);
     res.status(500).json({ message: 'Erro interno ao buscar usuários' });
@@ -20,7 +20,7 @@ exports.getUserById = async (req, res) => {
 
   try {
     const user = await User.findById(id).orFail();
-    res.status(200).json(user);
+    res.status(200).json({ data: user });
   } catch (error) {
     if (error.name === 'DocumentNotFoundError') {
       return res.status(404).json({ message: `Usuário ${id} não encontrado` });
@@ -49,7 +49,7 @@ exports.checkUser = async(req, res) => {
     if(!user){
       return res.status(404).json({error : "Usuário não encontrado"})
     }
-    return res.status(200).json(user)
+    return res.status(200).json({ data: user })
   } catch (error) {
     console.error(`Erro ao verificar token`, error);
     res.status(500).json({ message: 'Erro ao verificar token' });
@@ -66,11 +66,13 @@ exports.createUser = async (req, res) => {
       about: "Explorer", 
       avatar: "https://practicum-content.s3.us-west-1.amazonaws.com/resources/moved_avatar_1604080799.jpg" });
     res.status(201).json({
-      id: newUser._id,
-      email: newUser.email,
-      name: newUser.name,
-      about: newUser.about,
-      avatar: newUser.avatar,
+      data:{
+        id: newUser._id,
+        email: newUser.email,
+        name: newUser.name,
+        about: newUser.about,
+        avatar: newUser.avatar,
+      }
     });
   } catch (error) {
     if (error.name === 'ValidationError') {
@@ -91,7 +93,12 @@ exports.loginUser = async (req, res) => {
     const token = jwt.sign(user, process.env.JWT_SECRET,{
       expiresIn:"7d"
     })
-    res.status(201).json({id: user.id,token});
+    res.status(201).json({
+       data: {
+        id: user.id,
+        token
+      }
+    });
   } catch (error) {
     console.error('Erro ao fazer login:', error);
     res.status(500).json({ message: 'Erro ao fazer login' });
@@ -105,7 +112,9 @@ exports.updateUser = async(req,res) => {
     const updatedUser = await User.findByIdAndUpdate(userId,
       { name, about},
       {new:true,runValidators: true}).orFail()
-      res.status(200).json({message: "usuário atualizado com sucesso",updatedUser})
+      res.status(200).json({
+        data: updatedUser
+      })
   }catch(error){
     if (error.name === 'DocumentNotFoundError') {
       return res.status(404).json({ message: `Usuário com ID ${userId} não encontrado` });
@@ -129,7 +138,9 @@ exports.updateAvatar = async(req,res) => {
     const updatedAvatar = await User.findByIdAndUpdate(userId,
       {avatar},
       {new:true,runValidators:true}).orFail()
-      res.status(200).json({message: "avatar de usuário atualizado com sucesso",updatedAvatar})
+      res.status(200).json({
+        data: updatedAvatar
+      })
   }catch(error){
     if (error.name === 'DocumentNotFoundError') {
       return res.status(404).json({ message: `Usuário com ID ${userId} não encontrado` });

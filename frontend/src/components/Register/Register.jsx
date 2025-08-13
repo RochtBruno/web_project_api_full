@@ -26,7 +26,7 @@ function Register() {
         throw new Error(message.error);
       }
       const result = await response.json();
-      if (!result.data.email || !result.data._id) {
+      if (!result.data.email || !result.data.id) {
         throw new Error(`Data não recebida: ${result}`);
       }
       setTooltipStatus("success");

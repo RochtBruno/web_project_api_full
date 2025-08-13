@@ -7,8 +7,10 @@ const { createUser, loginUser } = require("./controllers/users.js")
 const db = process.env.MONGO_URI
 const app = express()
 const auth = require("./middleware/auth")
+const cors = require("cors")
 
 app.use(express.json())
+app.use(cors())
 
 mongoose.connect(db)
 .then(() => console.log("connected to db"))

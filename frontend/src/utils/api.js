@@ -1,18 +1,26 @@
 class Api {
   constructor({ baseUrl, headers }) {
     this._baseUrl = baseUrl;
-    this._headers = headers;
   }
 
-  async _makeRequest(url, method, body) {
-    const options = {
-      method,
-      headers: this._headers,
-    };
+  async _makeRequest(url, method, body, token) {
+
+    const headers = {
+      "Content-type": "application/json"
+    }
+
+    if(token){
+      headers["Authorization"] = `Bearer ${token}`
+    }
 
     if (body) {
       options.body = JSON.stringify(body);
     }
+
+    const options = {
+      method,
+      headers
+    };
 
     return fetch(this._baseUrl + url, options)
       .then((res) => {
@@ -24,50 +32,46 @@ class Api {
       .catch((err) => console.log(err));
   }
 
-  getUser() {
-    return this._makeRequest("/users/me");
+  getUser(token) {
+    return this._makeRequest("/users/me", "GET", null, token);
   }
 
-  updateUser(name, about) {
+  updateUser(name, about, token) {
     return this._makeRequest("/users/me", "PATCH", {
       name: name,
       about: about,
-    });
+    }, token);
   }
 
-  updateAvatar(avatarLink) {
+  updateAvatar(avatarLink, token) {
     return this._makeRequest("/users/me/avatar", "PATCH", {
       avatar: avatarLink,
-    });
+    },token);
   }
 
-  getInitialCards() {
-    return this._makeRequest("/cards");
+  getInitialCards(token) {
+    return this._makeRequest("/cards", "GET", null, token);
   }
 
-  createCard(card) {
-    return this._makeRequest("/cards", "POST", card);
+  createCard(card, token) {
+    return this._makeRequest("/cards", "POST", card, token);
   }
 
-  deleteCard(cardId) {
-    return this._makeRequest(`/cards/${cardId}`, "DELETE");
+  deleteCard(cardId, token) {
+    return this._makeRequest(`/cards/${cardId}`, "DELETE", null, token);
   }
 
-  addLike(cardId) {
-    return this._makeRequest(`/cards/${cardId}/likes`, "PUT");
+  addLike(cardId, token) {
+    return this._makeRequest(`/cards/${cardId}/likes`, "PUT", null, token);
   }
 
-  removeLike(cardId) {
-    return this._makeRequest(`/cards/${cardId}/likes`, "DELETE");
+  removeLike(cardId, token) {
+    return this._makeRequest(`/cards/${cardId}/likes`, "DELETE", null, token);
   }
 }
 
 const api = new Api({
-  baseUrl: "https://around-api.pt-br.tripleten-services.com/v1",
-  headers: {
-    authorization: "6776f0e2-04cc-4374-8e7e-91a09af225f0",
-    "Content-Type": "application/json",
-  },
+  baseUrl: "http://localhost:3000"
 });
 
 export default api;

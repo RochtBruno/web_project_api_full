@@ -18,6 +18,7 @@ function App() {
   const [isLoading, setLoading] = useState(false);
   const [isLoggedIn, setLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState("");
+  const [token, setToken] = useState("")
 
   const navigate = useNavigate();
 
@@ -28,14 +29,15 @@ function App() {
   };
 
   const handleCheckToken = useCallback(async () => {
-    const token = localStorage.getItem("jwt");
-    if (!token) {
+    const storedToken = localStorage.getItem("jwt");
+    setToken(storedToken)
+    if (!storedToken) {
       console.log("token not found");
       navigate("/signin", { replace: true });
       return;
     }
     try {
-      const response = await checkToken({ token });
+      const response = await checkToken({ token: storedToken });
       if (response.status != 200) {
         const message = await response.json();
         throw new Error(message.error);
@@ -55,7 +57,7 @@ function App() {
 
   useEffect(() => {
     api
-      .getUser()
+      .getUser(token)
       .then((data) => setCurrentUser(data))
       .catch((err) =>
         console.log("Erro ao buscar informações do usuário: ", err)
@@ -63,7 +65,8 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const token = localStorage.getItem("jwt");
+    // const token = localStorage.getItem("jwt");
+    setToken(localStorage.getItem("jwt"))
     if (token) {
       handleCheckToken();
     }
@@ -72,7 +75,7 @@ function App() {
   const handleUpdateUser = (name, about) => {
     setLoading(true);
     api
-      .updateUser(name, about)
+      .updateUser(name, about, token)
       .then((userData) => {
         setCurrentUser(userData);
       })
@@ -85,7 +88,7 @@ function App() {
   const handleUpdateAvatar = (avatarUrl) => {
     setLoading(true);
     api
-      .updateAvatar(avatarUrl)
+      .updateAvatar(avatarUrl, token)
       .then((userData) => setCurrentUser(userData))
       .catch((err) => console.log("Erro ao mudar avatar", err))
       .finally(() => setLoading(false));
@@ -94,7 +97,7 @@ function App() {
   const getCardList = () => {
     setLoading(true);
     api
-      .getInitialCards()
+      .getInitialCards(token)
       .then((data) => setCard(data))
       .catch((err) => console.log("Erro ao buscar cards-> ", err))
       .finally(() => setLoading(false));
@@ -103,7 +106,7 @@ function App() {
   const handleAddPlaceSubmit = (card) => {
     setLoading(true);
     api
-      .createCard(card)
+      .createCard(card, token)
       .then((newCard) => setCard((prevCards) => [newCard, ...prevCards]))
       .catch((err) => console.log("Erro ao criar card ", err))
       .finally(() => setLoading(false));
@@ -111,8 +114,8 @@ function App() {
 
   const handleCardLike = (card) => {
     const likeRequest = card.isLiked
-      ? api.removeLike(card._id)
-      : api.addLike(card._id);
+      ? api.removeLike(card._id, token)
+      : api.addLike(card._id, token);
 
     likeRequest
       .then((updatedCard) => {
@@ -132,7 +135,7 @@ function App() {
   const handleCardDelete = (card) => {
     setLoading(true);
     api
-      .deleteCard(card._id)
+      .deleteCard(card._id, token)
       .then(() => {
         setCard((prevCards) => prevCards.filter((c) => c._id !== card._id));
         setPopup(null);

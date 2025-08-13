@@ -28,7 +28,7 @@ function Login({ setLoggedIn }) {
       if (!result.token) {
         throw new Error(`Data não recebida: ${result}`);
       }
-      localStorage.setItem("temporaryToken", result.token);
+      localStorage.setItem("jwt", result.token);
       setTooltipStatus("success");
       setTooltipMessage("Login realizado com sucesso");
       setIsTooltipOpen(true);
@@ -50,7 +50,7 @@ function Login({ setLoggedIn }) {
   const handleCloseTooltip = () => {
     setIsTooltipOpen(false);
     if (shouldRedirect) {
-      const token = localStorage.getItem("temporaryToken");
+      const token = localStorage.getItem("jwt");
       localStorage.setItem("jwt", token);
       setLoggedIn(true);
       navigate("/", { replace: true });

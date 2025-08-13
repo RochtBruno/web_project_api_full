@@ -1,4 +1,4 @@
-const baseUrl = "https://se-register-api.en.tripleten-services.com/v1"
+const baseUrl = "http://localhost:3000"
 
 export const register = async ({email,password}) => {
 	return fetch(`${baseUrl}/signup`,{
