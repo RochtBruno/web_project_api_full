@@ -1,6 +1,6 @@
 import { useState } from "react";
 import InfoTooltip from "../InfoTooltip/InfoTooltip.jsx";
-import { register } from "../../utils/auth.js";
+import { register } from "../../utils/auth-front.js";
 import { Link, useNavigate } from "react-router-dom";
 
 function Register() {

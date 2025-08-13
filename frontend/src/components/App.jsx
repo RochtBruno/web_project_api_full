@@ -6,10 +6,10 @@ import Login from "./Login/Login.jsx";
 import NotFound from "./NotFound/NotFound.jsx";
 import ProtectedRoute from "./ProtectedRoute/ProtectedRoute.jsx";
 import { useState, useEffect, useCallback } from "react";
-import api from "../utils/api.js";
+import api from "../utils/api-front.js";
 import CurrentUserContext from "../contexts/CurrentUserContext.js";
 import { Routes, Route, useNavigate } from "react-router-dom";
-import { checkToken } from "../utils/auth.js";
+import { checkToken } from "../utils/auth-front.js";
 
 function App() {
   const [currentUser, setCurrentUser] = useState({});
@@ -56,21 +56,23 @@ function App() {
   }, [navigate]);
 
   useEffect(() => {
-    api
+    if(token){
+      api
       .getUser(token)
       .then((data) => setCurrentUser(data))
       .catch((err) =>
         console.log("Erro ao buscar informações do usuário: ", err)
       );
-  }, []);
+    }
+  }, [token]);
 
   useEffect(() => {
-    // const token = localStorage.getItem("jwt");
-    setToken(localStorage.getItem("jwt"))
-    if (token) {
+    const storedToken = localStorage.getItem("jwt");
+    setToken(storedToken)
+    if (storedToken) {
       handleCheckToken();
     }
-  }, [localStorage.getItem("jwt")]);
+  }, []);
 
   const handleUpdateUser = (name, about) => {
     setLoading(true);
@@ -89,7 +91,13 @@ function App() {
     setLoading(true);
     api
       .updateAvatar(avatarUrl, token)
-      .then((userData) => setCurrentUser(userData))
+      .then((userData) => {
+        if(userData && userData.data){
+          setCurrentUser(userData.data)
+        }else{
+          console.log("resposta inesperada ao atualizar o avatar")
+        }
+      })
       .catch((err) => console.log("Erro ao mudar avatar", err))
       .finally(() => setLoading(false));
   };
@@ -98,7 +106,7 @@ function App() {
     setLoading(true);
     api
       .getInitialCards(token)
-      .then((data) => setCard(data))
+      .then((data) => setCard(data.data))
       .catch((err) => console.log("Erro ao buscar cards-> ", err))
       .finally(() => setLoading(false));
   };

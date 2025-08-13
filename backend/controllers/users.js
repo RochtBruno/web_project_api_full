@@ -106,7 +106,7 @@ exports.loginUser = async (req, res) => {
 };
 
 exports.updateUser = async(req,res) => {
-  const userId = req.user._id
+  const userId = req.user.id
   const {name, about } = req.body;
   try{
     const updatedUser = await User.findByIdAndUpdate(userId,
@@ -131,7 +131,7 @@ exports.updateUser = async(req,res) => {
 }
 
 exports.updateAvatar = async(req,res) => {
-  const userId = req.user._id;
+  const userId = req.user.id;
   const {avatar} = req.body;
 
   try{

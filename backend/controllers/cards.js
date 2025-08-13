@@ -3,7 +3,7 @@ const Card = require('../models/card')
 exports.getAllCards = async (req, res) => {
   try {
     const cards = await Card.find({});
-    res.status(200).json(cards);
+    res.status(200).json({data: cards});
   } catch (error) {
     console.error('Erro ao buscar cards:', error);
     res.status(500).json({ message: 'Erro interno ao buscar cards' });

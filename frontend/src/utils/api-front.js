@@ -9,6 +9,11 @@ class Api {
       "Content-type": "application/json"
     }
 
+    const options = {
+      method,
+      headers
+    };
+
     if(token){
       headers["Authorization"] = `Bearer ${token}`
     }
@@ -17,15 +22,10 @@ class Api {
       options.body = JSON.stringify(body);
     }
 
-    const options = {
-      method,
-      headers
-    };
-
     return fetch(this._baseUrl + url, options)
       .then((res) => {
         if (!res.ok) {
-          throw new Error(`Error: ${res.status}`);
+          return res.json().then(err => { throw err });
         }
         return res.json();
       })
