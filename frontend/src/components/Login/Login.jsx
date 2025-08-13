@@ -29,6 +29,7 @@ function Login({ setLoggedIn }) {
         throw new Error(`Data não recebida: ${result}`);
       }
       localStorage.setItem("jwt", result.data.token);
+      setLoggedIn(true)
       setTooltipStatus("success");
       setTooltipMessage("Login realizado com sucesso");
       setIsTooltipOpen(true);

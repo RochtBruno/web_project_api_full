@@ -43,7 +43,7 @@ function App() {
         throw new Error(message.error);
       }
       const result = await response.json();
-      if (!result.data || !result.data._id) {
+      if (!result.data || !result.data.id) {
         handleLogout();
         throw new Error(`Data not receivied: ${result}`);
       }
@@ -56,15 +56,15 @@ function App() {
   }, [navigate]);
 
   useEffect(() => {
-    if(token){
+    if(isLoggedIn && token){
       api
       .getUser(token)
-      .then((data) => setCurrentUser(data))
+      .then((data) => setCurrentUser(data.data))
       .catch((err) =>
         console.log("Erro ao buscar informações do usuário: ", err)
       );
     }
-  }, [token]);
+  }, [isLoggedIn, token]);
 
   useEffect(() => {
     const storedToken = localStorage.getItem("jwt");

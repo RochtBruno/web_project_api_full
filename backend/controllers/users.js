@@ -49,7 +49,13 @@ exports.checkUser = async(req, res) => {
     if(!user){
       return res.status(404).json({error : "Usuário não encontrado"})
     }
-    return res.status(200).json({ data: user })
+    return res.status(200).json({ data: {
+      id: user._id,
+      email: user.email,
+      name: user.name,
+      about: user.about,
+      avatar: user.avatar
+    }})
   } catch (error) {
     console.error(`Erro ao verificar token`, error);
     res.status(500).json({ message: 'Erro ao verificar token' });
@@ -113,7 +119,13 @@ exports.updateUser = async(req,res) => {
       { name, about},
       {new:true,runValidators: true}).orFail()
       res.status(200).json({
-        data: updatedUser
+        data: {
+          id: updatedUser._id,
+          email: updatedUser.email,
+          name: updatedUser.name,
+          about: updatedUser.about,
+          avatar: updatedUser.avatar
+        }
       })
   }catch(error){
     if (error.name === 'DocumentNotFoundError') {
@@ -139,7 +151,13 @@ exports.updateAvatar = async(req,res) => {
       {avatar},
       {new:true,runValidators:true}).orFail()
       res.status(200).json({
-        data: updatedAvatar
+        data: {
+          id: updatedAvatar._id,
+          email: updatedAvatar.email,
+          name: updatedAvatar.name,
+          about: updatedAvatar.about,
+          avatar: updatedAvatar.avatar
+        }
       })
   }catch(error){
     if (error.name === 'DocumentNotFoundError') {

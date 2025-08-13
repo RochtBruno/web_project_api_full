@@ -62,6 +62,8 @@ function Main({
     setPopupState(null);
   }
 
+  console.log(currentUser.name)
+
   return (
     <>
       <section className="profile">
@@ -72,9 +74,9 @@ function Main({
           <img src={currentUser.avatar} alt="foto de perfil" />
         </div>
         <div className="profile__infos">
-          <h2 className="profile__infos-title">{currentUser.name || ""}</h2>
+          <h2 className="profile__infos-title">{currentUser.name || "teste"}</h2>
           <p className="profile__infos-description">
-            {currentUser.about || ""}
+            {currentUser.about || "teste"}
           </p>
           <div
             className="profile__infos-edit"
