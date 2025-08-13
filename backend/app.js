@@ -6,22 +6,16 @@ require("dotenv").config()
 const { createUser, loginUser } = require("./controllers/users.js")
 const db = process.env.MONGO_URI
 const app = express()
-const PORT = 3000
+const auth = require("./middleware/auth")
 
 app.use(express.json())
-app.use((req, res, next) => {
-  req.user = {
-    _id: '685344c22129cdc75e7cb775'
-  };
-  next();
-});
 
 mongoose.connect(db)
 .then(() => console.log("connected to db"))
 .catch(err => console.log("error while connecting to db: ",err))
 
-app.use("/users",userRouter)
-app.use("/cards",cardRouter)
+app.use("/users", auth ,userRouter)
+app.use("/cards",auth, cardRouter)
 app.post("/signup", createUser);
 app.post("/signin",loginUser)
 
@@ -31,6 +25,6 @@ app.use((req,res) => {
 })
 
 
-app.listen(PORT,()=>{
-  console.log("Servidor funcionando na porta ",PORT)
+app.listen(process.env.PORT,()=>{
+  console.log("Servidor funcionando na porta ", process.env.PORT)
 })

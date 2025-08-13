@@ -39,7 +39,6 @@ exports.checkUser = async(req, res) => {
     return res.status(401).json({error: "token não fornecido"})
   }
   const [,token] = authorization.split(" ")
-  console.log(token);
   try {
     const isValid = jwt.verify(token, process.env.JWT_SECRET)
     if(!isValid){
