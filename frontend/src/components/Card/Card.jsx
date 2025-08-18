@@ -6,8 +6,6 @@ import ImagePopup from "../ImagePopup/imagePopup";
 function Card(props) {
   const { name, link, isLiked } = props.card;
 
-  console.log(isLiked)
-
   const handleDelete = () => {
     if (props.onDelete) {
       props.onDelete(props.card);
