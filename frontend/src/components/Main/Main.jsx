@@ -20,9 +20,9 @@ function Main({
 }) {
   const { currentUser } = useContext(CurrentUserContext);
 
-  useEffect(() => {
-    getCardList();
-  },[]);
+  // useEffect(() => {
+  //   getCardList();
+  // },[]);
 
   const editProfilePopup = {
     title: "Editar perfil",
@@ -61,8 +61,6 @@ function Main({
   function handleClosePopup() {
     setPopupState(null);
   }
-
-  console.log(currentUser.name)
 
   return (
     <>

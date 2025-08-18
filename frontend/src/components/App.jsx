@@ -106,10 +106,33 @@ function App() {
     setLoading(true);
     api
       .getInitialCards(token)
-      .then((data) => setCard(data.data))
+      .then((data) => {
+        const cardsWithIsLiked = data.data.map(card => ({
+          ...card,
+          isLiked: card.likes.includes(currentUser.id)
+        }));
+        setCard(cardsWithIsLiked);
+      })
       .catch((err) => console.log("Erro ao buscar cards-> ", err))
       .finally(() => setLoading(false));
   };
+
+  useEffect(() => {
+    if (isLoggedIn && token && currentUser.id) {
+      setLoading(true);
+      api
+        .getInitialCards(token)
+        .then((data) => {
+          const cardsWithIsLiked = data.data.map(card => ({
+            ...card,
+            isLiked: card.likes.includes(currentUser.id)
+          }));
+          setCard(cardsWithIsLiked);
+        })
+        .catch((err) => console.log("Erro ao buscar cards-> ", err))
+        .finally(() => setLoading(false));
+    }
+  }, [isLoggedIn, token, currentUser.id]);
 
   const handleAddPlaceSubmit = (card) => {
     setLoading(true);

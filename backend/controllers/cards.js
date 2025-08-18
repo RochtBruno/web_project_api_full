@@ -13,7 +13,7 @@ exports.getAllCards = async (req, res) => {
 exports.createCard = async (req, res) => {
   try {
     const { name, link } = req.body;
-    const owner = req.user._id;
+    const owner = req.user.id;
     const newCard = await Card.create({ name, link, owner });
     res.status(201).json(newCard);
   } catch (error) {
@@ -44,7 +44,7 @@ exports.deleteCardById = async (req, res) => {
 };
 
 exports.likeCard = async (req,res) => {
-  const userId = req.user._id
+  const userId = req.user.id
   const { cardId } = req.params
 
   try {
@@ -67,7 +67,7 @@ exports.likeCard = async (req,res) => {
 
 
 exports.dislikeCard = async (req,res) => {
-  const userId = req.user._id
+  const userId = req.user.id
   const {cardId} = req.params
 
   try {
