@@ -20,10 +20,6 @@ function Main({
 }) {
   const { currentUser } = useContext(CurrentUserContext);
 
-  // useEffect(() => {
-  //   getCardList();
-  // },[]);
-
   const editProfilePopup = {
     title: "Editar perfil",
     children: <EditProfilePopup onClose={handleClosePopup} />,

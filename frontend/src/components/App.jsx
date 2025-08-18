@@ -24,6 +24,7 @@ function App() {
 
   const handleLogout = () => {
     setLoggedIn(false);
+    setCurrentUser({})
     localStorage.removeItem("jwt");
     navigate("/signin", { replace: true });
   };
