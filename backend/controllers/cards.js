@@ -27,8 +27,13 @@ exports.createCard = async (req, res) => {
 
 exports.deleteCardById = async (req, res) => {
   const { id } = req.params;
+  const userId = req.user.id
 
   try {
+    const card = await Card.findById(id).orFail();
+    if(card.owner.toString() !== userId){
+      return res.status(403).json({message : "Você não tem permissão para deletar o card"})
+    }
     const deletedCard = await Card.findByIdAndDelete(id).orFail();
     res.status(200).json({ message: "Card deletado com sucesso", card: deletedCard });
   } catch (error) {

@@ -29,7 +29,7 @@ class Api {
         }
         return res.json();
       })
-      .catch((err) => console.log(err));
+      // .catch((err) => console.log(err));
   }
 
   getUser(token) {

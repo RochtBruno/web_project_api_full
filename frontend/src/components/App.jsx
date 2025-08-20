@@ -10,6 +10,7 @@ import api from "../utils/api-front.js";
 import CurrentUserContext from "../contexts/CurrentUserContext.js";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { checkToken } from "../utils/auth-front.js";
+import InfoTooltip from "./InfoTooltip/InfoTooltip.jsx";
 
 function App() {
   const [currentUser, setCurrentUser] = useState({});
@@ -18,6 +19,9 @@ function App() {
   const [isLoading, setLoading] = useState(false);
   const [isLoggedIn, setLoggedIn] = useState(false);
   const [token, setToken] = useState("")
+  const [isTooltipOpen, setIsTooltipOpen] = useState(false);
+  const [tooltipStatus, setTooltipStatus] = useState("success");
+  const [tooltipMessage, setTooltipMessage] = useState("");
 
   const navigate = useNavigate();
 
@@ -78,7 +82,7 @@ function App() {
     api
       .updateUser(name, about, token)
       .then((userData) => {
-        setCurrentUser(userData);
+        setCurrentUser(userData.data);
       })
       .catch((err) => {
         console.log("Erro ao atualizar usuário", err);
@@ -102,6 +106,7 @@ function App() {
   };
 
   const getCardList = () => {
+    console.log("get card list")
     setLoading(true);
     api
       .getInitialCards(token)
@@ -111,6 +116,7 @@ function App() {
           isLiked: card.likes.includes(currentUser.id)
         }));
         setCard(cardsWithIsLiked);
+        console.log(card)
       })
       .catch((err) => console.log("Erro ao buscar cards-> ", err))
       .finally(() => setLoading(false));
@@ -166,19 +172,46 @@ function App() {
     setLoading(true);
     api
       .deleteCard(card._id, token)
-      .then(() => {
-        setCard((prevCards) => prevCards.filter((c) => c._id !== card._id));
+      .then((response) => {
+        if(response && response.message === "Card deletado com sucesso"){
+          setCard((prevCards) => prevCards.filter((c) => c._id !== card._id));
+        }else if(response && response.message === "Você não tem permissão para deletar o card"){
+          setTooltipStatus("failure");
+          setTooltipMessage("Você não tem permissão para deletar o card");
+          setIsTooltipOpen(true);
+        }
         setPopup(null);
       })
       .catch((err) => {
-        console.log("Erro ao deletar card", err);
+        if(err && err.message === "Você não tem permissão para deletar o card"){
+          setTooltipStatus("failure");
+          setTooltipMessage("Você não tem permissão para deletar o card");
+          setIsTooltipOpen(true);
+        } else {
+          setTooltipStatus("failure");
+          setTooltipMessage("Erro ao deletar card");
+          setIsTooltipOpen(true);
+        }
         setPopup(null);
       })
       .finally(() => setLoading(false));
   };
 
+  const handleCloseTooltip = () => {
+    setIsTooltipOpen(false);
+  };
+
   return (
     <div className="page">
+      {isTooltipOpen && (
+        <div className="popup__overlay">
+          <InfoTooltip
+            status={tooltipStatus}
+            message={tooltipMessage}
+            onClose={handleCloseTooltip}
+          />
+        </div>
+      )}
       <CurrentUserContext.Provider
         value={{ currentUser, handleUpdateUser, handleUpdateAvatar }}
       >
