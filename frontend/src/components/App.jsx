@@ -17,7 +17,6 @@ function App() {
   const [popup, setPopup] = useState(null);
   const [isLoading, setLoading] = useState(false);
   const [isLoggedIn, setLoggedIn] = useState(false);
-  const [userEmail, setUserEmail] = useState("");
   const [token, setToken] = useState("")
 
   const navigate = useNavigate();
@@ -48,7 +47,6 @@ function App() {
         handleLogout();
         throw new Error(`Data not receivied: ${result}`);
       }
-      setUserEmail(result.data.email);
       setLoggedIn(true);
       navigate("/", { replace: true });
     } catch (error) {
@@ -184,7 +182,7 @@ function App() {
       <CurrentUserContext.Provider
         value={{ currentUser, handleUpdateUser, handleUpdateAvatar }}
       >
-        <Header handleLogout={handleLogout} userEmail={userEmail} />
+        <Header handleLogout={handleLogout} userEmail={currentUser.email} />
         <Routes>
           <Route
             path="/"
@@ -204,7 +202,7 @@ function App() {
             }
           />
           <Route path="/signup" element={<Register />} />
-          <Route path="/signin" element={<Login setLoggedIn={setLoggedIn} />} />
+          <Route path="/signin" element={<Login setLoggedIn={setLoggedIn} setToken={setToken} setCurrentUser={setCurrentUser} currentUser={currentUser} setCard={setCard}/>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />

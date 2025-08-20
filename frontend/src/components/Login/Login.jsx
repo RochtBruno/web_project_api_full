@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import InfoTooltip from "../InfoTooltip/InfoTooltip.jsx";
 import { authorize } from "../../utils/auth-front.js";
 import { Link, useNavigate } from "react-router-dom";
 
-function Login({ setLoggedIn }) {
+function Login({ setLoggedIn, setToken, setCurrentUser, currentUser }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
@@ -29,6 +29,7 @@ function Login({ setLoggedIn }) {
         throw new Error(`Data não recebida: ${result}`);
       }
       localStorage.setItem("jwt", result.data.token);
+      setToken(result.data.token)
       setLoggedIn(true)
       setTooltipStatus("success");
       setTooltipMessage("Login realizado com sucesso");

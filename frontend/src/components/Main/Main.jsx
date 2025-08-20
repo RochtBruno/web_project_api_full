@@ -9,7 +9,6 @@ import Card from "../Card/Card.jsx";
 import CurrentUserContext from "../../contexts/CurrentUserContext.js";
 
 function Main({
-  getCardList,
   cardState,
   onCardLike,
   onCardDelete,
