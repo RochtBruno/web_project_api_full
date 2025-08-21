@@ -4,7 +4,9 @@ import likeActiveIcon from "../../images/Union.svg";
 import ImagePopup from "../ImagePopup/imagePopup";
 
 function Card(props) {
-  const { name, link, isLiked } = props.card;
+  const { name, link, likes } = props.card;
+
+  const isLiked = likes.length
 
   const handleDelete = () => {
     if (props.onDelete) {
@@ -39,12 +41,17 @@ function Card(props) {
       </div>
       <div className="cards__card-infos">
         <h2 className="cards__card-title">{name}</h2>
-        <img
+        <div className="card__card-like-info">
+          <img
           className="cards__card-like"
           src={isLiked ? likeActiveIcon : likeIcon}
           alt="Curtir"
           onClick={props.onLike}
         />
+          <span className="cards__card-number-likes" style={{ fontSize: "16px", color: "#222" }}>
+            {likes.length}
+          </span>
+        </div>
       </div>
     </div>
   );

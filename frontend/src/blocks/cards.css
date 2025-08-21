@@ -43,7 +43,7 @@
   justify-content: space-between;
   align-items: center;
   margin-top: 10px;
-  padding: 0 30px;
+  padding: 0 20px;
 }
 
 .cards__card-title {
@@ -55,6 +55,11 @@
   overflow: hidden;
 }
 
+.card__card-like-info{
+  display: flex;
+  align-items: center;
+}
+
 .cards__card-like {
   cursor: pointer;
   width: 21px;
@@ -63,6 +68,10 @@
 
 .cards__card-like:hover {
   opacity: 0.5;
+}
+
+.cards__card-number-likes{
+  margin-left: 5px;
 }
 
 .popup__overlay {

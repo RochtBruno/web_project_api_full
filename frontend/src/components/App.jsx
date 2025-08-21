@@ -113,7 +113,7 @@ function App() {
       .then((data) => {
         const cardsWithIsLiked = data.data.map(card => ({
           ...card,
-          isLiked: card.likes.includes(currentUser.id)
+          isLiked: card.likes.length
         }));
         setCard(cardsWithIsLiked);
         console.log(card)
@@ -130,7 +130,7 @@ function App() {
         .then((data) => {
           const cardsWithIsLiked = data.data.map(card => ({
             ...card,
-            isLiked: card.likes.includes(currentUser.id)
+            isLiked: card.likes.length > 0
           }));
           setCard(cardsWithIsLiked);
         })
@@ -154,7 +154,8 @@ function App() {
       : api.addLike(card._id, token);
 
     likeRequest
-      .then((updatedCard) => {
+      .then((response) => {
+        const updatedCard = response.updatedCard
         setCard((prevCards) =>
           prevCards.map((c) =>
             c._id === card._id
