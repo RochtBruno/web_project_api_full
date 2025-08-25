@@ -1,5 +1,5 @@
 class Api {
-  constructor({ baseUrl, headers }) {
+  constructor({ baseUrl}) {
     this._baseUrl = baseUrl;
   }
 
@@ -29,7 +29,6 @@ class Api {
         }
         return res.json();
       })
-      // .catch((err) => console.log(err));
   }
 
   getUser(token) {
@@ -71,7 +70,7 @@ class Api {
 }
 
 const api = new Api({
-  baseUrl: "http://localhost:3000"
+  baseUrl: import.meta.env.VITE_API_URL
 });
 
 export default api;
